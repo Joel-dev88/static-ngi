@@ -10,7 +10,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', credentialsId: 'Github', url: 'git@github.com:Joel-dev88/njatPipeline.git'
+                git branch: 'main', credentialsId: 'Github', url: 'git@github.com:Joel-dev88/static-ngi.git'
             }
         }
     
@@ -18,11 +18,11 @@ pipeline {
             steps {
                 script {
                     if (params.Action == "apply") {
-                        sh 'terraform init'
-                        sh 'terraform apply  "name=hello" -var "group=devopsaws" -var "region=us-east-2" -var "profile=joeldevops" --auto-approve terraform/static-site'
+                        sh './terraform init terraform/static-site'
+                        sh './terraform apply  "name=hello" -var "group=devopsaws" -var "region=us-east-2" -var "profile=joeldevops" --auto-approve terraform/static-site'
                     }
                     else {
-                        sh 'terraform destroy -var "name=hello" -var "group=devopsaws" -var "region=us-east-2" -var "profile=joeldevops" --auto-approve terraform/static-site'
+                        sh './terraform destroy -var "name=hello" -var "group=devopsaws" -var "region=us-east-2" -var "profile=joeldevops" --auto-approve terraform/static-site'
                     }
                 }
             }
