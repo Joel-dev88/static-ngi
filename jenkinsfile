@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+    parameters {
+        choice(
+            name: 'Action',
+            choices: "apply\ndestroy",
+            description: 'Apply or Destroy Instance'
+        )
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', credentialsId: 'Github', url: 'git@github.com:Joel-dev88/njatPipeline.git'
+            }
+        }
+    
+        stage('Terraform') {
+            steps {
+                script {
+                    if (params.Action == "apply") {
+                        sh 'terraform init'
+                        sh 'terraform apply  "name=hello" -var "group=devopsaws" -var "region=us-east-2" -var "profile=joeldevops" --auto-approve terraform/static-site'
+                    }
+                    else {
+                        sh 'terraform destroy -var "name=hello" -var "group=devopsaws" -var "region=us-east-2" -var "profile=joeldevops" --auto-approve terraform/static-site'
+                    }
+                }
+            }
+        }
+
+        stage('Ansible') {
+            steps {
+                retry(count: 5) {
+                    sh 'ansible-playbook -i ansible/static-site/aws_ec2.yaml ansible/static-site/site.yaml'
+                }
+            }
+        }
+    }
+}
