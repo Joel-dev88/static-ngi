@@ -1,11 +1,10 @@
 pipeline {
     agent any
-    parameters {
-        choice(
-            name: 'Action',
-            choices: "apply\ndestroy",
-            description: 'Apply or Destroy Instance'
-        )
+
+    tools {
+        terraform 'terraform'
+    }
+   
     }
     stages {
         stage('Checkout') {
