@@ -11,7 +11,7 @@ pipeline {
     
         stage('Terraform') {
             steps {
-                sh 'terraform init terraform/static-site'
+                sh 'terraform init work/NDTAAJ_scotty/terraform/static-site'
             
             }
         }
